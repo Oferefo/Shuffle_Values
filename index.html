@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Music Notation Shuffle</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; margin: 20px; }
+        .note-buttons { margin: 20px; }
+        button { margin: 5px; padding: 10px; font-size: 16px; }
+        .message { font-size: 18px; margin-top: 20px; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <h2>Music Notation Shuffle</h2>
+    <label for="notation">Select Notation:</label>
+    <select id="notation" onchange="updateNotes()">
+        <option value="CDE">C, D, E</option>
+        <option value="DoReMi">Do, Re, Mi</option>
+    </select>
+    <br><br>
+    <button onclick="shuffleNotes()">Shuffle</button>
+    <div class="note-buttons" id="buttons"></div>
+    <div class="message" id="message"></div>
+    
+    <script>
+        let correctOrder = [];
+        let shuffledOrder = [];
+        let userSelection = [];
+
+        function updateNotes() {
+            const notation = document.getElementById("notation").value;
+            correctOrder = notation === "CDE" ? ["C", "D", "E", "F", "G", "A"] : ["Do", "Re", "Mi", "Fa", "Sol", "La"];
+            shuffleNotes();
+        }
+
+        function shuffleNotes() {
+            shuffledOrder = [...correctOrder].sort(() => Math.random() - 0.5);
+            userSelection = [];
+            renderButtons();
+            document.getElementById("message").innerText = "";
+        }
+
+        function renderButtons() {
+            const buttonContainer = document.getElementById("buttons");
+            buttonContainer.innerHTML = "";
+            shuffledOrder.forEach(note => {
+                const btn = document.createElement("button");
+                btn.innerText = note;
+                btn.onclick = () => selectNote(note);
+                buttonContainer.appendChild(btn);
+            });
+        }
+
+        function selectNote(note) {
+            userSelection.push(note);
+            if (userSelection.length === correctOrder.length) {
+                checkAnswer();
+            }
+        }
+
+        function checkAnswer() {
+            if (JSON.stringify(userSelection) === JSON.stringify(correctOrder)) {
+                document.getElementById("message").innerText = "✅ Very Good! Let's Shuffle Again!";
+                setTimeout(shuffleNotes, 2000);
+            } else {
+                document.getElementById("message").innerText = "❌ Try Again";
+                setTimeout(() => document.getElementById("message").innerText = "", 2000);
+                userSelection = [];
+            }
+        }
+
+        updateNotes();
+    </script>
+</body>
+</html>
