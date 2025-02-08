@@ -1,63 +1,47 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Music Shuffle App</title>
-    <script>
-        let notes = {
-            "C,D,E": ["C", "D", "E", "F", "G", "A"],
-            "Do,Re,Mi": ["Do", "Re", "Mi", "Fa", "Sol", "La"]
-        };
-        
-        function shuffle(array) {
-            for (let i = array.length - 1; i > 0; i--) {
-                let j = Math.floor(Math.random() * (i + 1));
-                [array[i], array[j]] = [array[j], array[i]];
-            }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Music Notation Shuffle</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; margin: 20px; }
+        .note-buttons { 
+            display: flex; /* Arrange columns horizontally */
+            justify-content: center; /* Center the columns */
+            margin: 20px; 
         }
-        
-        function loadNotes() {
-            let selection = document.getElementById("notationSelect").value;
-            let shuffledNotes = [...notes[selection]];
-            shuffle(shuffledNotes);
-            
-            let buttonsContainer = document.getElementById("buttonsContainer");
-            buttonsContainer.innerHTML = "";
-            shuffledNotes.forEach(note => {
-                let button = document.createElement("button");
-                button.innerText = note;
-                button.onclick = () => checkAnswer(note);
-                buttonsContainer.appendChild(button);
-            });
+        .column {
+            display: flex;
+            flex-direction: column; /* Stack note and buttons vertically */
+            align-items: center; /* Center items horizontally */
+            margin: 0 10px; /* Add spacing between columns */
         }
-        
-        function checkAnswer(note) {
-            let correctOrder = notes[document.getElementById("notationSelect").value];
-            let inputArea = document.getElementById("answerContainer");
-            inputArea.innerHTML += note + " ";
-            
-            let userInput = inputArea.innerText.trim().split(" ");
-            if (userInput.length === correctOrder.length) {
-                if (JSON.stringify(userInput) === JSON.stringify(correctOrder)) {
-                    alert("Very Good! Let's Shuffle Again!");
-                } else {
-                    alert("Try Again");
-                }
-                inputArea.innerHTML = "";
-            }
+        button { 
+            margin: 5px; 
+            padding: 10px; 
+            font-size: 16px; 
         }
-    </script>
+        .message {
+            font-size: 18px;
+            margin-top: 20px;
+            font-weight: bold;
+             display: none; /* Initially hidden */
+        }
+    </style>
 </head>
 <body>
-    <h1>Music Shuffle App</h1>
-    <label>Select Notation:</label>
-    <select id="notationSelect" onchange="loadNotes()">
-        <option value="C,D,E">C,D,E</option>
-        <option value="Do,Re,Mi">Do,Re,Mi</option>
+    <h2>Music Notation Shuffle</h2>
+    <label for="notation">Select Notation:</label>
+    <select id="notation-select">
+        <option value="C,D,E">C, D, E</option>
+        <option value="Do,Re,Mi">Do, Re, Mi</option>
     </select>
-    <button onclick="loadNotes()">Shuffle</button>
-    
-    <div id="buttonsContainer" style="margin-top: 20px;"></div>
-    <h3>Your Answer:</h3>
-    <div id="answerContainer" style="font-size: 20px; font-weight: bold;"></div>
+    <br><br>
+    <button id="shuffle-button">Shuffle</button>
+    <div id="notation-area" class="note-buttons"></div>
+    <div class="message" id="message"></div>
+
+    <script src="script.js"></script>
 </body>
 </html>
